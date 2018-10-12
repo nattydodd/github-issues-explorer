@@ -32,15 +32,16 @@ const Card = ({title, body, labels, issueUrl, owner, repo, number, closed}) =>
         <div>
           <div className="card-labels">
             <ul>
-            {labels.map(label =>
-              <li key={label.id}>{label.name}</li>
-            )}
+              {labels.map(label => (
+                <li key={label.id}>{label.name}</li>
+              ))}
             </ul>
           </div>
         </div>
       )}
     </div>
   </div>
+);
 
 const githubUrl = (owner, repo) => `https://github.com/${owner}/${repo}/`;
 
@@ -49,10 +50,11 @@ class Issues extends Component {
     super(props);
     this.state = {
       issues: {},
-      owner: '',
-      repo: '',
-      filter: 'all',
-    }
+      owner: "",
+      repo: "",
+      filter: "all",
+      page: 1 // By default, page always start at 1
+    };
   }
 
   componentDidMount() {
@@ -60,7 +62,7 @@ class Issues extends Component {
     const owner = a[1];
     const repo = a[2];
     this.setState({ owner, repo });
-    this.props.getIssues({ owner, repo });
+    this.props.getIssues({ owner, repo, page: this.state.page });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -69,16 +71,24 @@ class Issues extends Component {
   }
 
   handleFilter = by => {
-    this.props.filterIssues(by)
+    this.props.filterIssues(by);
     this.setState({ filter: by });
-  }
+  };
 
   issueUrl = (owner, repo, id) => {
     window.location.href = `https://github.com/${owner}/${repo}/issues/${id}`;
   };
 
+  handlePageChange = number => {
+    const { owner, repo, page } = this.state;
+    let newPage = page + number;
+
+    this.props.getIssues({ owner, repo, page: newPage });
+    this.setState({ page: newPage });
+  };
+
   render() {
-    const {owner, repo, issues, filter} = this.state;
+    const { owner, repo, issues, filter } = this.state;
     return (
       <div className="App">
         <header className="App-header">
@@ -91,9 +101,9 @@ class Issues extends Component {
         </header>
         <div className="issues-filters">
           <ul>
-            <li onClick={() => {this.handleFilter('all')}} className={(filter === 'all' ? 'selected' : '')}>All issues</li>
-            <li onClick={() => {this.handleFilter('open')}} className={(filter === 'open' ? 'selected' : '')}>Open issues</li>
-            <li onClick={() => {this.handleFilter('closed')}} className={(filter === 'closed' ? 'selected' : '')}>Closed issues</li>
+            <li onClick={() => this.handleFilter("all")} className={filter === "all" ? "selected" : ""}>All issues</li>
+            <li onClick={() => this.handleFilter("open")} className={filter === "open" ? "selected" : ""}>Open issues</li>
+            <li onClick={() => this.handleFilter("closed")} className={filter === "closed" ? "selected" : ""}>Closed issues</li>
           </ul>
         </div>
         <div className="issues-container">
@@ -109,6 +119,27 @@ class Issues extends Component {
             number={issue.number}
             closed={issue.closed_at ? true : false}
             />
+          ))}
+        </div>
+        <div className="paginator">
+          {this.state.page > 1 && (
+            <button
+              className="paginator-button"
+              onClick={() => this.handlePageChange(-1)}
+            >
+              <i className="material-icons">arrow_back_ios</i>
+            </button>
+          )}
+          <span className="page-number">{this.state.page}</span>
+          {/* Since GitHub sends 30 issues per page, 
+              there is no more requests if there are not exactly 30 requests */}
+          {Object.keys(this.state.issues).length === 30 && (
+            <button
+              className="paginator-button"
+              onClick={() => this.handlePageChange(1)}
+            >
+              <i className="material-icons">arrow_forward_ios</i>
+            </button>
           )}
         </div>
       </div>

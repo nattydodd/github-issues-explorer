@@ -20,8 +20,8 @@ export const filterIssues = by => {
 
 
 
-export const getIssues = ({owner, repo}) => {
-  const newUrl = `https://api.github.com/repos/${owner}/${repo}/issues?access_token=${config.access_token}&state=all`
+export const getIssues = ({owner, repo, page}) => {
+  const newUrl = `https://api.github.com/repos/${owner}/${repo}/issues?access_token=${config.access_token}&state=all&page=${page}`
   console.log(newUrl)
   return dispatch => {
     dispatch(getIssuesStarted({owner, repo}));

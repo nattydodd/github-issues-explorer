@@ -1,12 +1,26 @@
 @import './variables';
+$breakpoint-tablet: 768px;
 
 .App-header {
   background-color: $color-primary;
-  height: 80px;
+  height: auto;
   display: flex;
   justify-content: space-between;
   color: white;
   padding: 0 5%;
+}
+@media (max-width: $breakpoint-tablet) {
+  .App-header {
+    flex-direction: column;
+    margin-bottom: 0;
+    text-align: center;
+  }
+  .App-title {
+    margin-bottom: 0;
+  }
+  .App-url {
+    margin-top: 10px;
+  }
 }
 .App-url {
   line-height: 2.5em;
@@ -125,4 +139,30 @@
       border-radius: 8px;
     }
   }
+}
+
+
+/* PAGINATION */
+
+.paginator {
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.paginator-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #2196f3;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.page-number {
+  margin: 0 15px;
+  font-size: 25px;
 }
