@@ -109,3 +109,29 @@
     }
   }
 }
+
+
+/* PAGINATION */
+
+.paginator {
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.paginator-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #2196f3;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.page-number {
+  margin: 0 15px;
+  font-size: 25px;
+}
