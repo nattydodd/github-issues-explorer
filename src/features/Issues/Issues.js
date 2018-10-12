@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import './Issues.css';
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux';
-import { getIssues, filterIssues } from './actions';
+import React, { Component } from "react";
+import "./Issues.css";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { getIssues, filterIssues } from "./actions";
 
 const maxLength = 50;
 
-const Card = ({title, body, labels}) =>
-  <div className="card">
+const Card = ({title, body, labels, issueUrl, owner, repo, number}) =>
+<div className="card" onClick={() => issueUrl(owner, repo, number)}>
     <div className="card-title">
       <h4>{title}</h4>
     </div>
     <div className="card-body">
       <div>
-        <p>{body && body.substring(0,maxLength)}</p>
+        <p>{body && body.substring(0, maxLength)}</p>
       </div>
-      {labels &&
+      {labels && (
         <div>
           <div className="card-labels">
             <ul>
@@ -25,15 +25,13 @@ const Card = ({title, body, labels}) =>
             </ul>
           </div>
         </div>
-      }
+      )}
     </div>
   </div>
-
 
 const githubUrl = (owner, repo) => `https://github.com/${owner}/${repo}/`;
 
 class Issues extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -45,15 +43,15 @@ class Issues extends Component {
   }
 
   componentDidMount() {
-    let a = this.props.location.pathname.split('/')
+    let a = this.props.location.pathname.split("/");
     const owner = a[1];
     const repo = a[2];
-    this.setState({owner, repo})
-    this.props.getIssues({owner, repo});
+    this.setState({ owner, repo });
+    this.props.getIssues({ owner, repo });
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ issues: nextProps.filteredIssues })
+    this.setState({ issues: nextProps.filteredIssues });
     console.log(nextProps.filteredIssues);
   }
 
@@ -62,13 +60,21 @@ class Issues extends Component {
     this.setState({ filter: by });
   }
 
+  issueUrl = (owner, repo, id) => {
+    window.location.href = `https://github.com/${owner}/${repo}/issues/${id}`;
+  };
+
   render() {
     const {owner, repo, issues, filter} = this.state;
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title"><Link to="/">Github Issue Viewer</Link></h1>
-          <h4 className="App-url"><a href={githubUrl(owner, repo)}>{githubUrl(owner, repo)}</a></h4>
+          <h1 className="App-title">
+            <Link to="/">Github Issue Viewer</Link>
+          </h1>
+          <h4 className="App-url">
+            <a href={githubUrl(owner, repo)}>{githubUrl(owner, repo)}</a>
+          </h4>
         </header>
         <div className="issues-filters">
           <ul>
@@ -84,6 +90,10 @@ class Issues extends Component {
             title={issue.title}
             body={issue.body}
             labels={issue.labels}
+            issueUrl={this.issueUrl}
+            owner={owner}
+            repo={repo}
+            number={issue.number}
             />
           )}
         </div>
@@ -96,11 +106,14 @@ const mapStateToProps = state => ({
   filteredIssues: state.issues.filteredIssues,
   fetched: state.issues.fetched,
   isLoading: state.issues.isLoading
-})
+});
 
 const mapDispatchToProps = dispatch => ({
-  getIssues: (url) => dispatch(getIssues(url)),
-  filterIssues: (state) => dispatch(filterIssues(state))
-})
+  getIssues: url => dispatch(getIssues(url)),
+  filterIssues: state => dispatch(filterIssues(state))
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Issues);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Issues);
