@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import './Landing.css';
+import './Landing.scss';
 
 class Landing extends Component {
 
@@ -31,11 +31,11 @@ class Landing extends Component {
      <div className="search-bar">
        <form onSubmit={this.handleSubmit}>
          <i className="material-icons search-icon noUserSelect">search</i>
-         <input 
-           type="url" 
+         <input
+           type="url"
            name="url"
-           value={this.state.url} 
-           id="search-input" 
+           value={this.state.url}
+           id="search-input"
            placeholder="Paste a link to a Github repo!"
            onChange={this.handleChange}
          />
