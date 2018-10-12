@@ -51,6 +51,9 @@
   cursor: pointer;
 }
 
+.issues-filters > ul > li.selected {
+  color: #ff6f00;
+}
 
 /* ISSUES */
 
@@ -102,4 +105,3 @@
   cursor:pointer;
 
 }
-
