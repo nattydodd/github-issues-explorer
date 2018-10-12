@@ -90,6 +90,23 @@
     color: white;
     padding: 20px;
     font-size: 18px;
+    position: relative;
+  }
+  .card-status-icon {
+    background: white;
+    padding: 3px 5px;
+    border-radius: 8px;
+    display: inline-flex;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    &.open svg {
+      fill: green !important;
+    }
+    &.closed svg {
+      fill: red !important;
+    }
   }
   .card-body {
     padding: 20px;
